@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>My Task - Full Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#155EEF; --primary-dark:#0B3FA8; --primary-mid:#3B7BF5; --primary-light:#EBF2FE; --primary-tint:#DCE9FD;
+    --navy:#0E2A54;
+    --waiting:#E8830D; --waiting-bg:#FFF2E0;
+    --assigned:#16A163; --assigned-bg:#E4F9EE;
+    --submitted:#0FA3B1; --submitted-bg:#E1F7F9;
+    --overdue:#E2483C; --overdue-bg:#FDEAE8;
+    --p-critical:#E2483C; --p-high:#E8830D; --p-medium:#EABE2C; --p-low:#4CBB8A; --p-normal:#C7CFDA;
+    --text-primary:#111827; --text-secondary:#667085; --text-tertiary:#98A2B3;
+    --bg:#F3F5F9; --card-bg:#FFFFFF; --border:#EAECF1;
+    --radius-card:18px; --radius-chip:999px;
+    --shadow-card:0 1px 2px rgba(16,24,40,.03),0 4px 14px rgba(16,24,40,.055);
+    --shadow-card-hover:0 6px 20px rgba(21,94,239,.14),0 2px 6px rgba(16,24,40,.06);
+    --shadow-nav:0 -2px 16px rgba(16,24,40,.06);
+    --shadow-modal:0 24px 70px rgba(14,42,84,.28);
+    --shadow-header:0 8px 24px rgba(11,63,168,.18);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Noto Sans Thai','Inter',system-ui,sans-serif;
+    background:var(--bg); color:var(--text-primary);
+    height:100vh; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  button, input, select, textarea{ font-family:inherit; }
+
+  .device{
+    position:relative; background:#0d0f12; border-radius:38px;
+    box-shadow:0 30px 80px rgba(0,0,0,.35); padding:14px;
+    width:768px; height:1024px; max-height:96vh; max-width:96vw;
+    aspect-ratio:3/4; transition:width .35s ease, aspect-ratio .35s ease;
+  }
+  .device.landscape{ aspect-ratio:4/3; width:1150px; }
+  .screen{
+    position:relative; width:100%; height:100%; background:var(--bg);
+    border-radius:24px; overflow:hidden; display:flex; flex-direction:column;
+  }
+
+  .statusbar{
+    height:32px; flex:0 0 auto; background:var(--navy);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 18px; color:#fff; font-size:12px; font-weight:600; font-family:'Inter',sans-serif;
+  }
+  .statusbar .icons{display:flex; gap:6px; align-items:center;}
+
+  .app-header{
+    position:relative; flex:0 0 auto; overflow:hidden;
+    background:linear-gradient(160deg,var(--primary-mid) 0%,var(--primary) 45%,var(--navy) 130%);
+    padding:14px 18px 18px; color:#fff; box-shadow:var(--shadow-header);
+  }
+  .app-header::before{
+    content:''; position:absolute; top:-60px; right:-40px; width:200px; height:200px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.12), transparent 70%); pointer-events:none;
+  }
+  .app-header::after{
+    content:''; position:absolute; bottom:-70px; left:20%; width:180px; height:180px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.06), transparent 70%); pointer-events:none;
+  }
+  .top-row{ position:relative; display:flex; align-items:center; justify-content:space-between; z-index:1; }
+  .top-row .left{ display:flex; align-items:center; gap:12px; min-width:0; }
+  .icon-btn{
+    width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+    border-radius:11px; background:rgba(255,255,255,.15); cursor:pointer; border:none; color:#fff; flex:0 0 auto;
+    backdrop-filter:blur(4px); transition:background .15s ease, transform .12s ease;
+  }
+  .icon-btn:active{ background:rgba(255,255,255,.3); transform:scale(.93); }
+  .app-title{ font-size:19px; font-weight:800; letter-spacing:.1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .app-subtitle{ font-size:12px; opacity:.85; margin-top:1px; }
+
+  .search-row{ position:relative; z-index:1; margin-top:16px; display:flex; gap:10px; }
+  .search-box{
+    flex:1; background:rgba(255,255,255,.96); border-radius:13px; height:46px; display:flex; align-items:center; gap:10px;
+    padding:0 14px; color:var(--text-secondary); font-size:14px; box-shadow:0 4px 14px rgba(11,63,168,.12);
+  }
+  .search-box input{ border:none; outline:none; flex:1; font-size:14px; color:var(--text-primary); background:transparent; }
+  .search-box input::placeholder{ color:var(--text-tertiary); }
+  .filter-btn{
+    background:rgba(255,255,255,.96); color:var(--primary); border:none; border-radius:13px; height:46px; padding:0 18px;
+    display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px; cursor:pointer; white-space:nowrap; position:relative;
+    box-shadow:0 4px 14px rgba(11,63,168,.12); transition:transform .12s ease;
+  }
+  .filter-btn:active{ transform:scale(.96); }
+  .filter-btn .badge-dot{ position:absolute; top:6px; right:8px; width:8px; height:8px; border-radius:50%; background:var(--overdue); box-shadow:0 0 0 2px #fff; }
+
+  .chip-row{
+    flex:0 0 auto; display:flex; gap:9px; padding:14px 18px; overflow-x:auto;
+    background:var(--bg); border-bottom:1px solid var(--border); scrollbar-width:none;
+  }
+  .chip-row::-webkit-scrollbar{ display:none; }
+  .chip{
+    display:flex; align-items:center; gap:7px; height:40px; padding:0 15px; border-radius:var(--radius-chip);
+    font-size:12.5px; font-weight:700; border:1.5px solid var(--border); background:#fff; color:var(--text-secondary);
+    cursor:pointer; white-space:nowrap; flex:0 0 auto; transition:all .15s ease;
+  }
+  .chip:active{ transform:scale(.96); }
+  .chip .count{ background:rgba(0,0,0,.05); color:var(--text-secondary); border-radius:999px; font-size:11px; padding:1px 7px; font-weight:800; }
+  .chip.active{ background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 4px 12px rgba(21,94,239,.28); }
+  .chip.active .count{ background:rgba(255,255,255,.25); color:#fff; }
+  .chip[data-key="waiting"]{ color:var(--waiting); } .chip[data-key="assigned"]{ color:var(--assigned); }
+  .chip[data-key="submitted"]{ color:var(--submitted); } .chip[data-key="all"]{ color:var(--primary); } .chip[data-key="overdue"]{ color:var(--overdue); }
+  .chip.active[data-key]{ color:#fff; }
+  .chip[data-key="waiting"].active{ background:var(--waiting); border-color:var(--waiting); }
+  .chip[data-key="assigned"].active{ background:var(--assigned); border-color:var(--assigned); }
+  .chip[data-key="submitted"].active{ background:var(--submitted); border-color:var(--submitted); }
+  .chip[data-key="overdue"].active{ background:var(--overdue); border-color:var(--overdue); }
+
+  .list-meta{ flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; padding:12px 18px 4px; font-size:13px; color:var(--text-secondary); }
+  .sort-btn{ display:flex; align-items:center; gap:6px; color:var(--primary); font-weight:600; cursor:pointer; }
+
+  .body-scroll{ flex:1 1 auto; overflow-y:auto; }
+  .list-wrap{ padding:8px 18px 18px; display:grid; grid-template-columns:1fr; gap:12px; align-content:start; }
+  .device.landscape .list-wrap{ grid-template-columns:1fr 1fr; }
+  .device.landscape .list-wrap.single-col{ grid-template-columns:1fr; max-width:640px; margin:0 auto; }
+
+  .empty-state{ text-align:center; padding:60px 20px; color:var(--text-secondary); }
+  .empty-state svg{ opacity:.35; margin-bottom:12px; }
+  .empty-state .t{ font-weight:700; color:var(--text-primary); margin-bottom:4px; }
+  .empty-state .s{ font-size:13px; }
+
+  .card{
+    position:relative; background:var(--card-bg); border-radius:var(--radius-card); box-shadow:var(--shadow-card);
+    padding:15px 15px 15px 17px; border-left:none; cursor:pointer; border:1px solid var(--border);
+    transition:transform .14s ease, box-shadow .14s ease; animation:fadeIn .3s ease;
+  }
+  .card::before{
+    content:''; position:absolute; left:0; top:14px; bottom:14px; width:4px; border-radius:4px; background:var(--p-normal);
+  }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .card:active{ transform:scale(.983); box-shadow:var(--shadow-card-hover); }
+  .card.p-critical::before{ background:var(--p-critical); } .card.p-high::before{ background:var(--p-high); }
+  .card.p-medium::before{ background:var(--p-medium); } .card.p-low::before{ background:var(--p-low); }
+
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding-left:6px; }
+  .card-top .left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .wo-no{ font-size:12.5px; font-weight:700; color:var(--text-tertiary); font-family:'Inter',sans-serif; letter-spacing:.2px; }
+  .type-tag{ font-size:10.5px; font-weight:800; background:var(--primary-tint); color:var(--primary-dark); border-radius:7px; padding:3px 7px; font-family:'Inter',sans-serif; letter-spacing:.4px; }
+  .status-badge{ font-size:10.5px; font-weight:800; padding:5px 10px; border-radius:8px; white-space:nowrap; letter-spacing:.3px; }
+  .status-badge.waiting{ background:var(--waiting-bg); color:var(--waiting); }
+  .status-badge.assigned{ background:var(--assigned-bg); color:var(--assigned); }
+  .status-badge.submitted{ background:var(--submitted-bg); color:var(--submitted); }
+
+  .kebab-wrap{ position:relative; flex:0 0 auto; }
+  .kebab{ width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:8px; color:var(--text-tertiary); cursor:pointer; transition:background .12s ease; }
+  .kebab:active{ background:rgba(0,0,0,.06); }
+  .kebab-menu{
+    position:absolute; top:34px; right:0; background:#fff; border-radius:12px; box-shadow:var(--shadow-modal);
+    min-width:170px; z-index:20; overflow:hidden; border:1px solid var(--border); animation:fadeIn .15s ease;
+  }
+  .kebab-menu .item{ padding:12px 14px; font-size:13px; font-weight:600; color:var(--text-primary); cursor:pointer; display:flex; align-items:center; gap:9px; }
+  .kebab-menu .item:hover{ background:var(--bg); }
+  .kebab-menu .item.danger{ color:var(--overdue); }
+
+  .card-title{ font-size:16.5px; font-weight:800; margin-top:9px; color:var(--text-primary); line-height:1.3; padding-left:6px; letter-spacing:-.1px; }
+  .card-subtitle{ font-size:12.5px; color:var(--text-secondary); margin-top:3px; padding-left:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card-bottom{ display:flex; align-items:flex-end; justify-content:space-between; margin-top:13px; gap:8px; padding-left:6px; }
+  .tags{ display:flex; gap:6px; flex-wrap:wrap; }
+  .tag{ font-size:10.5px; font-weight:700; color:var(--text-secondary); background:var(--bg); border-radius:7px; padding:4px 8px; }
+  .due{ text-align:right; flex:0 0 auto; }
+  .due .label{ font-size:10px; color:var(--text-tertiary); font-weight:700; letter-spacing:.3px; }
+  .due .date{ font-size:13px; font-weight:800; color:var(--overdue); font-family:'Inter',sans-serif; }
+  .due .date.ok{ color:var(--text-primary); }
+  .draft-flag{ display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; color:var(--primary); background:var(--primary-light); padding:3px 8px; border-radius:7px; margin-top:9px; margin-left:6px; }
+
+  .bottom-nav{ flex:0 0 auto; display:flex; background:#fff; box-shadow:var(--shadow-nav); padding:8px 6px 12px; border-top:1px solid var(--border); }
+  .nav-item{ flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; padding:7px 4px; border-radius:13px; color:var(--text-tertiary); cursor:pointer; min-height:44px; justify-content:center; position:relative; transition:background .15s ease, color .15s ease; }
+  .nav-item.active{ color:var(--primary); background:var(--primary-light); }
+  .nav-item .label{ font-size:10.5px; font-weight:700; }
+  .nav-item .dot-badge{ position:absolute; top:2px; right:22%; width:8px; height:8px; border-radius:50%; background:var(--overdue); border:2px solid #fff; }
+
+  /* ===== Detail / Form screen ===== */
+  .detail-body{ padding:16px 18px 100px; }
+  .device.landscape .detail-body{ max-width:760px; margin:0 auto; padding-bottom:110px; }
+  .section-card{ background:#fff; border-radius:18px; box-shadow:var(--shadow-card); padding:19px; margin-bottom:14px; border:1px solid var(--border); }
+  .section-title{ font-size:14.5px; font-weight:800; color:var(--text-primary); display:flex; align-items:center; gap:9px; margin-bottom:16px; }
+  .section-title .num{ width:23px; height:23px; border-radius:8px; background:linear-gradient(135deg,var(--primary-mid),var(--primary-dark)); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+
+  .info-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px 16px; }
+  .info-item .k{ font-size:10.5px; color:var(--text-tertiary); margin-bottom:3px; font-weight:700; letter-spacing:.2px; }
+  .info-item .v{ font-size:14px; font-weight:700; color:var(--text-primary); }
+  .desc-box{ margin-top:15px; padding:13px; background:var(--bg); border-radius:12px; font-size:13px; color:var(--text-secondary); line-height:1.55; border-left:3px solid var(--primary-tint); }
+
+  .field{ margin-bottom:16px; }
+  .field:last-child{ margin-bottom:0; }
+  .field label{ display:flex; font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:7px; align-items:center; gap:4px; }
+  .field label .req{ color:var(--overdue); }
+  .field .hint{ font-size:11.5px; color:var(--text-tertiary); margin-top:5px; }
+  .field input[type=text], .field input[type=date], .field input[type=number], .field select, .field textarea{
+    width:100%; border:1.5px solid var(--border); border-radius:11px; padding:12px 13px; font-size:14px;
+    color:var(--text-primary); outline:none; background:var(--bg); transition:border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px var(--primary-tint); }
+  .field.invalid input, .field.invalid textarea, .field.invalid select{ border-color:var(--overdue); background:var(--overdue-bg); }
+  .field.invalid .err{ display:block; }
+  .field textarea{ resize:vertical; min-height:80px; }
+  .err{ display:none; color:var(--overdue); font-size:11.5px; margin-top:5px; font-weight:600; }
+
+  .radio-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .radio-opt{
+    flex:1; min-width:110px; border:1.5px solid var(--border); border-radius:12px; padding:12px 10px; text-align:center;
+    font-size:13px; font-weight:700; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
+    background:var(--bg); transition:all .13s ease;
+  }
+  .radio-opt.sel-pass.selected{ border-color:var(--assigned); background:var(--assigned-bg); color:var(--assigned); box-shadow:0 3px 10px rgba(22,161,99,.18); }
+  .radio-opt.sel-fail.selected{ border-color:var(--overdue); background:var(--overdue-bg); color:var(--overdue); box-shadow:0 3px 10px rgba(226,72,60,.18); }
+  .radio-opt.sel-follow.selected{ border-color:var(--waiting); background:var(--waiting-bg); color:var(--waiting); box-shadow:0 3px 10px rgba(232,131,13,.18); }
+
+  .measure-table{ width:100%; border-collapse:collapse; margin-top:4px; }
+  .measure-table th{ font-size:11px; color:var(--text-secondary); text-align:left; padding:0 6px 8px; font-weight:700; }
+  .measure-table td{ padding:4px 6px 4px 0; }
+  .measure-table input{ width:100%; border:1.5px solid var(--border); border-radius:8px; padding:8px 9px; font-size:13px; outline:none; }
+  .measure-table input:focus{ border-color:var(--primary); }
+  .row-del{ width:30px; height:30px; border-radius:8px; background:var(--overdue-bg); color:var(--overdue); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .add-row-btn{
+    margin-top:10px; display:flex; align-items:center; gap:6px; color:var(--primary); font-weight:700; font-size:13px;
+    background:var(--primary-light); border:none; border-radius:10px; padding:9px 14px; cursor:pointer;
+  }
+
+  .upload-zone{ border:1.5px dashed var(--border); border-radius:12px; padding:20px; text-align:center; color:var(--text-secondary); cursor:pointer; font-size:13px; }
+  .upload-zone:hover{ border-color:var(--primary); color:var(--primary); }
+  .file-chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .file-chip{ display:flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:12px; color:var(--text-primary); }
+  .file-chip button{ border:none; background:none; color:var(--text-tertiary); cursor:pointer; font-size:14px; line-height:1; padding:0; }
+
+  .confirm-row{ display:flex; align-items:flex-start; gap:10px; padding:12px; background:var(--bg); border-radius:10px; cursor:pointer; }
+  .confirm-row input{ width:18px; height:18px; margin-top:1px; accent-color:var(--primary); flex:0 0 auto; }
+  .confirm-row span{ font-size:13px; color:var(--text-primary); line-height:1.4; }
+
+  .detail-actionbar{
+    position:absolute; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--border);
+    padding:12px 18px calc(14px + env(safe-area-inset-bottom)); display:flex; gap:10px; box-shadow:0 -4px 16px rgba(16,24,40,.08);
+  }
+  .btn{ flex:1; height:49px; border-radius:13px; font-size:14px; font-weight:700; cursor:pointer; border:none; display:flex; align-items:center; justify-content:center; gap:8px; transition:transform .12s ease, filter .12s ease; }
+  .btn:active{ transform:scale(.97); }
+  .btn-outline{ background:#fff; border:1.5px solid var(--border); color:var(--text-primary); }
+  .btn-outline:active{ background:var(--bg); }
+  .btn-primary{ background:linear-gradient(135deg,var(--primary-mid),var(--primary-dark)); color:#fff; box-shadow:0 6px 16px rgba(21,94,239,.32); }
+  .btn-primary:active{ filter:brightness(.94); }
+  .btn-primary:disabled, .btn-outline:disabled{ opacity:.5; cursor:not-allowed; }
+  .btn-danger-outline{ background:#fff; border:1.5px solid var(--overdue); color:var(--overdue); }
+
+  /* ===== Side Drawer ===== */
+  .drawer-overlay{
+    position:absolute; inset:0; background:rgba(11,20,38,.5); z-index:70; opacity:0; pointer-events:none;
+    transition:opacity .25s ease; backdrop-filter:blur(1px);
+  }
+  .drawer-overlay.open{ opacity:1; pointer-events:auto; }
+  .drawer{
+    position:absolute; top:0; bottom:0; left:0; width:78%; max-width:300px; background:#fff; z-index:71;
+    transform:translateX(-100%); transition:transform .28s cubic-bezier(.32,.72,0,1); display:flex; flex-direction:column;
+    box-shadow:12px 0 40px rgba(11,20,38,.25);
+  }
+  .drawer.open{ transform:translateX(0); }
+  .drawer-head{
+    position:relative; overflow:hidden; padding:26px 20px 22px;
+    background:linear-gradient(155deg,var(--primary-mid),var(--primary) 55%,var(--navy) 130%); color:#fff; flex:0 0 auto;
+  }
+  .drawer-head::before{ content:''; position:absolute; top:-50px; right:-30px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.14), transparent 70%); }
+  .drawer-avatar{ width:56px; height:56px; border-radius:16px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:20px; margin-bottom:12px; position:relative; z-index:1; }
+  .drawer-name{ font-size:16px; font-weight:800; position:relative; z-index:1; }
+  .drawer-role{ font-size:12px; opacity:.85; margin-top:2px; position:relative; z-index:1; }
+  .drawer-close{
+    position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.16);
+    border:none; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:2;
+  }
+  .drawer-body{ flex:1; overflow-y:auto; padding:14px 10px; }
+  .drawer-section-label{ font-size:11px; font-weight:800; color:var(--text-tertiary); letter-spacing:.5px; padding:10px 12px 6px; }
+  .drawer-item{
+    display:flex; align-items:center; gap:13px; padding:12px 12px; border-radius:12px; cursor:pointer; color:var(--text-primary);
+    font-size:14px; font-weight:600; margin-bottom:2px; transition:background .12s ease;
+  }
+  .drawer-item:active{ background:var(--bg); }
+  .drawer-item.active{ background:var(--primary-light); color:var(--primary); }
+  .drawer-item .di-icon{ width:36px; height:36px; border-radius:10px; background:var(--bg); color:var(--text-secondary); display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .drawer-item.active .di-icon{ background:var(--primary); color:#fff; }
+  .drawer-item .di-badge{ margin-left:auto; background:var(--overdue); color:#fff; font-size:10.5px; font-weight:800; border-radius:999px; padding:2px 8px; }
+  .drawer-divider{ height:1px; background:var(--border); margin:10px 12px; }
+  .drawer-foot{ flex:0 0 auto; padding:14px; border-top:1px solid var(--border); }
+  .drawer-logout{
+    width:100%; height:46px; border-radius:12px; border:1.5px solid var(--overdue-bg); background:var(--overdue-bg); color:var(--overdue);
+    font-weight:700; font-size:13.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .drawer-version{ text-align:center; font-size:10.5px; color:var(--text-tertiary); margin-top:10px; }
+
+  /* ===== Modal / Filter panel ===== */
+  .overlay{ position:absolute; inset:0; background:rgba(16,24,40,.45); z-index:40; display:flex; align-items:flex-end; justify-content:center; animation:fadeInBg .18s ease; }
+  .device.landscape .overlay{ align-items:center; }
+  @keyframes fadeInBg{ from{opacity:0;} to{opacity:1;} }
+  .sheet{ background:#fff; width:100%; border-radius:20px 20px 0 0; max-height:80%; overflow-y:auto; padding:18px 18px calc(18px + env(safe-area-inset-bottom)); animation:slideUp .22s ease; }
+  .device.landscape .sheet{ border-radius:20px; max-width:520px; max-height:75%; }
+  @keyframes slideUp{ from{ transform:translateY(24px); opacity:0;} to{ transform:translateY(0); opacity:1;} }
+  .sheet-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .sheet-head h3{ margin:0; font-size:16px; }
+  .sheet-close{ width:32px; height:32px; border-radius:50%; background:var(--bg); border:none; color:var(--text-secondary); cursor:pointer; }
+  .filter-group{ margin-bottom:16px; }
+  .filter-group .g-title{ font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:8px; }
+  .filter-opts{ display:flex; gap:8px; flex-wrap:wrap; }
+  .filter-opt{ border:1.5px solid var(--border); border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; }
+  .filter-opt.selected{ border-color:var(--primary); background:var(--primary-light); color:var(--primary); }
+  .sheet-actions{ display:flex; gap:10px; margin-top:6px; }
+
+  /* ===== Notification list ===== */
+  .notif-item{ display:flex; gap:13px; padding:15px 18px; border-bottom:1px solid var(--border); background:#fff; cursor:pointer; transition:background .12s ease; }
+  .notif-item.unread{ background:var(--primary-light); }
+  .notif-item:active{ background:var(--bg); }
+  .notif-icon{ width:42px; height:42px; border-radius:12px; background:var(--bg); color:var(--text-secondary); display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .notif-item.unread .notif-icon{ background:linear-gradient(135deg,var(--primary-mid),var(--primary-dark)); color:#fff; box-shadow:0 4px 12px rgba(21,94,239,.28); }
+  .notif-body{ flex:1; min-width:0; }
+  .notif-title{ font-size:13.5px; font-weight:800; color:var(--text-primary); }
+  .notif-desc{ font-size:12.5px; color:var(--text-secondary); margin-top:2px; line-height:1.4; }
+  .notif-time{ font-size:11px; color:var(--text-tertiary); margin-top:5px; font-weight:600; }
+  .unread-dot{ width:8px; height:8px; border-radius:50%; background:var(--primary); flex:0 0 auto; margin-top:6px; box-shadow:0 0 0 3px var(--primary-tint); }
+
+  /* ===== Profile ===== */
+  .profile-hero{ position:relative; overflow:hidden; background:linear-gradient(160deg,var(--primary-mid),var(--primary) 50%,var(--navy) 140%); padding:32px 18px 54px; text-align:center; color:#fff; }
+  .profile-hero::before{ content:''; position:absolute; top:-60px; right:-40px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.13), transparent 70%); }
+  .avatar{ position:relative; z-index:1; width:84px; height:84px; border-radius:22px; background:rgba(255,255,255,.95); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; margin:0 auto 14px; box-shadow:0 10px 26px rgba(11,20,38,.28); }
+  .profile-hero h2{ position:relative; z-index:1; margin:0; font-size:19px; font-weight:800; }
+  .profile-hero p{ position:relative; z-index:1; margin:4px 0 0; font-size:13px; opacity:.85; }
+  .stats-row{ display:flex; gap:10px; margin:-32px 18px 0; position:relative; z-index:2; }
+  .stat-card{ flex:1; background:#fff; border-radius:16px; box-shadow:var(--shadow-card); padding:16px 8px; text-align:center; border:1px solid var(--border); }
+  .stat-card .n{ font-size:21px; font-weight:800; color:var(--primary); }
+  .stat-card .l{ font-size:10.5px; color:var(--text-secondary); margin-top:3px; font-weight:600; }
+  .menu-list{ margin:20px 18px; background:#fff; border-radius:16px; box-shadow:var(--shadow-card); overflow:hidden; border:1px solid var(--border); }
+  .menu-row{ display:flex; align-items:center; gap:13px; padding:15px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .12s ease; }
+  .menu-row:last-child{ border-bottom:none; }
+  .menu-row:active{ background:var(--bg); }
+  .menu-row .mi{ width:36px; height:36px; border-radius:10px; background:var(--bg); color:var(--text-secondary); display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .menu-row span{ flex:1; font-size:14px; font-weight:600; color:var(--text-primary); }
+  .logout-btn{ margin:8px 18px 18px; height:48px; border-radius:13px; border:1.5px solid var(--overdue-bg); background:var(--overdue-bg); color:var(--overdue); font-weight:700; cursor:pointer; width:calc(100% - 36px); transition:transform .12s ease; }
+  .logout-btn:active{ transform:scale(.97); }
+
+  /* ===== Toast ===== */
+  .toast{
+    position:absolute; left:18px; right:18px; bottom:22px; background:var(--navy); color:#fff; border-radius:14px;
+    padding:14px 16px; display:flex; align-items:center; gap:11px; font-size:13.5px; font-weight:600; z-index:80;
+    box-shadow:0 14px 34px rgba(11,20,38,.35); animation:toastIn .25s cubic-bezier(.32,.72,0,1);
+  }
+  .toast .ic{ width:27px; height:27px; border-radius:50%; background:var(--assigned); display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .toast.error .ic{ background:var(--overdue); }
+  @keyframes toastIn{ from{ opacity:0; transform:translateY(14px) scale(.97);} to{ opacity:1; transform:translateY(0) scale(1);} }
+
+  .rotate-btn{
+    position:fixed; top:18px; right:18px; width:48px; height:48px; border-radius:50%; background:#fff; border:1px solid var(--border);
+    box-shadow:0 6px 20px rgba(11,20,38,.18); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--primary); z-index:100;
+    transition:transform .15s ease;
+  }
+  .rotate-btn:active{ transform:scale(.9) rotate(15deg); }
+  @media (max-width:820px){ .rotate-btn{ top:8px; right:8px; width:42px; height:42px; } }
+</style>
+</head>
+<body>
+
+<button class="rotate-btn" id="rotateBtn" title="สลับแนวจอ">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12a10 10 0 0 1 15.9-8.1M22 12a10 10 0 0 1-15.9 8.1"/><path d="M16 2v5h-5M8 22v-5h5"/></svg>
+</button>
+
+<div class="device" id="device">
+  <div class="screen" id="screen"></div>
+</div>
+
+<script>
+/* ============ ICONS ============ */
+const ICONS = {
+  menu:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  search:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  filter:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+  sort:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M3 7h10M3 12h6M3 17h3"/><path d="M17 4v16M13 16l4 4 4-4"/></svg>',
+  back:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+  kebab:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>',
+  task:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2H4a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8l-6-6H9z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>',
+  grid:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+  plus:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+  bell:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+  user:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+  check:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  x:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  clock:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg>',
+  camera:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+  trash:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  eye:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  ban:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="5" y1="19" x2="19" y2="5"/></svg>',
+  file:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  wo:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/></svg>',
+  gear:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  logout:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+  home:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+};
+
+/* ============ DATA ============ */
+let uid = 100;
+const initialTasks = [
+  {id:1, wo:"202606100031", type:"PM", priority:"critical", status:"waiting", title:"TK-201 SLOP TANK", subtitle:"[EMX21] Roof & shell UTM survey ตรวจสอบความหนาเปลือกถังและหลังคาตามมาตรฐาน API 653", tags:["Tank","PLE","PLA"], due:"30/11/2025", equipment:"TK-201", location:"Emerald Complex 1", desc:"ดำเนินการตรวจสอบความหนาแผ่นเหล็กหลังคาและเปลือกถัง (Roof & Shell UTM Survey) ตามแผนงานตรวจสอบประจำปี พร้อมบันทึกจุดตรวจวัดและเปรียบเทียบกับค่ามาตรฐานขั้นต่ำที่กำหนด"},
+  {id:2, wo:"202606240019", type:"CM", priority:"high", status:"waiting", title:"BC-INLET SEPERATOR", subtitle:"[EMX21] Base line thickness by UTM grid.", tags:["Vessel","PLATONG","PLWL"], due:"31/12/2025", equipment:"V-102", location:"Platong Platform", desc:"ตรวจวัดความหนา Base Line ของถังแยก (Separator) ด้วยวิธี UTM Grid ตามจุดที่กำหนดในแผนผัง Grid Map เพื่อประเมินอัตราการกัดกร่อน"},
+  {id:3, wo:"202606130056", type:"PM", priority:"high", status:"waiting", title:"PSV-2210 RELIEF VALVE", subtitle:"[PM] Set pressure verification ทดสอบและปรับตั้งค่าความดันวาล์วนิรภัย", tags:["Valve","PLWL","PLA"], due:"15/01/2026", equipment:"PSV-2210", location:"Wellhead Platform L", desc:"ทดสอบ Set Pressure ของ Pressure Safety Valve และดำเนินการสอบเทียบตามรอบที่กำหนด พร้อมออกใบรับรองผลการทดสอบ"},
+  {id:4, wo:"202606180072", type:"CI", priority:"normal", status:"waiting", title:'8"-P-3305-SS', subtitle:"[M&I] CUI inspection, coating repair", tags:["Pipe","PLCPP2","PLE"], due:"20/06/2026", equipment:"P-3305", location:"Central Processing Platform 2", desc:"ตรวจสอบ Corrosion Under Insulation (CUI) บริเวณท่อขนาด 8 นิ้ว และดำเนินการซ่อมแซมสารเคลือบผิว (Coating) ในจุดที่พบความเสียหาย"},
+  {id:5, wo:"202606180073", type:"CM", priority:"high", status:"waiting", title:"HX-105 SHELL & TUBE", subtitle:"[EMX21] Tube bundle inspection ตรวจสอบมัดท่อแลกเปลี่ยนความร้อน", tags:["Exchanger","PLA"], due:"18/07/2026", equipment:"HX-105", location:"Emerald Complex 1", desc:"ถอด Tube Bundle เพื่อตรวจสอบสภาพภายในและทำความสะอาด รวมถึงตรวจสอบรอยรั่วด้วยวิธี Hydrotest"},
+  {id:6, wo:"202606180078", type:"CM", priority:"medium", status:"assigned", title:"P-401A CENTRIFUGAL PUMP", subtitle:"[M&I] Vibration & alignment check", tags:["Pump","PLE"], due:"22/07/2026", equipment:"P-401A", location:"Emerald Complex 1", desc:"ตรวจวัดค่าการสั่นสะเทือน (Vibration) และตรวจสอบแนวศูนย์เพลา (Alignment) ของปั๊มหอยโข่งตามแผนบำรุงรักษาเชิงป้องกัน"},
+  {id:7, wo:"202606190041", type:"PM", priority:"low", status:"assigned", title:"E-220 AIR COOLER", subtitle:"[PM] Fin cleaning & fan inspection", tags:["Cooler","PLWL"], due:"02/08/2026", equipment:"E-220", location:"Wellhead Platform L", desc:"ทำความสะอาดครีบระบายความร้อน (Fin) และตรวจสอบสภาพใบพัดลมของ Air Cooler ตามรอบบำรุงรักษา"},
+  {id:8, wo:"202606200015", type:"CI", priority:"high", status:"waiting", title:'10"-P-1102-CS', subtitle:"[M&I] Corrosion under insulation check", tags:["Pipe","PLA"], due:"10/08/2026", equipment:"P-1102", location:"Central Processing Platform 2", desc:"ตรวจสอบการกัดกร่อนใต้ฉนวนกันความร้อน (CUI) บริเวณท่อขนาด 10 นิ้ว พร้อมประเมินความจำเป็นในการซ่อมแซม"},
+  {id:9, wo:"202606210099", type:"CM", priority:"critical", status:"waiting", title:"D-301 KNOCKOUT DRUM", subtitle:"[EMX21] Level gauge replacement", tags:["Vessel","PLE","PLA"], due:"14/08/2026", equipment:"D-301", location:"Emerald Complex 1", desc:"เปลี่ยนอุปกรณ์วัดระดับ (Level Gauge) ของถัง Knockout Drum ที่ชำรุด และทดสอบการทำงานหลังติดตั้ง"},
+  {id:10, wo:"202606220003", type:"PM", priority:"normal", status:"submitted", title:"TK-105 STORAGE TANK", subtitle:"[PM] Annual gauging & calibration", tags:["Tank","PLWL"], due:"25/08/2026", equipment:"TK-105", location:"Wellhead Platform L", desc:"ดำเนินการวัดปริมาตรถังเก็บ (Gauging) และสอบเทียบตามรอบประจำปีตามข้อกำหนดมาตรฐาน API MPMS", inspection:{inspector:"สมชาย ใจดี", date:"2026-06-20", result:"pass", findings:"ค่าที่วัดได้อยู่ในเกณฑ์มาตรฐาน ไม่พบความผิดปกติ", recommendation:"ดำเนินการตรวจสอบตามรอบปกติในปีถัดไป", confirm:true, rows:[{loc:"Point A",reading:"12.4",std:"10.0 min"}]}},
+];
+
+const notifications = [
+  {id:1, unread:true, title:"งานใหม่ถูกมอบหมาย", desc:"WO 202606210099 D-301 KNOCKOUT DRUM ถูกมอบหมายให้คุณ", time:"5 นาทีที่แล้ว", icon:"wo"},
+  {id:2, unread:true, title:"ใกล้ครบกำหนด", desc:"WO 202606100031 TK-201 SLOP TANK จะครบกำหนดใน 2 วัน", time:"1 ชั่วโมงที่แล้ว", icon:"clock"},
+  {id:3, unread:true, title:"ส่งงานสำเร็จ", desc:"WO 202606220003 TK-105 STORAGE TANK ถูกส่งเรียบร้อยแล้ว", time:"เมื่อวาน", icon:"check"},
+  {id:4, unread:false, title:"งานถูกปฏิเสธ", desc:"WO 202606050012 ถูกตีกลับ กรุณาตรวจสอบข้อมูลอีกครั้ง", time:"2 วันที่แล้ว", icon:"x"},
+  {id:5, unread:false, title:"อัปเดตระบบ", desc:"ระบบ My Task ได้รับการอัปเดตเวอร์ชันใหม่ 2.4.0", time:"3 วันที่แล้ว", icon:"bell"},
+];
+
+const statusLabel = { waiting:"WAITING EXECUTE", assigned:"ASSIGNED", submitted:"SUBMITTED" };
+const priorityLabel = { critical:"Critical / Overdue", high:"High", medium:"Medium", low:"Low", normal:"Normal" };
+
+/* ============ STATE ============ */
+const S = {
+  tab:'mytask', view:'list', filter:'all', sort:'due-asc', search:'',
+  tasks: initialTasks, notifications: notifications,
+  selectedId:null, kebabOpenId:null, filterSheetOpen:false, drawerOpen:false,
+  filterPriority:[], filterType:[],
+  toast:null, toastTimer:null,
+  createForm:{}, createErrors:{},
+  inspForm:{}, inspErrors:{}, confirmSubmitFor:null,
+};
+
+function toast(msg, type='ok'){
+  S.toast = {msg,type};
+  clearTimeout(S.toastTimer);
+  render();
+  S.toastTimer = setTimeout(()=>{ S.toast=null; render(); }, 2400);
+}
+
+function dateToDMY(iso){
+  if(!iso) return '';
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+/* ============ RENDER HELPERS ============ */
+function statusBar(){
+  return `<div class="statusbar">
+    <span>09:30</span>
+    <div class="icons">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.24 4.24 0 0 0-6 0zm-4-4l2 2a7.07 7.07 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <span>100%</span>
+      <svg width="20" height="12" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="19" height="10" rx="2"/><rect x="22" y="4" width="1.5" height="4" fill="currentColor" stroke="none"/></svg>
+    </div>
+  </div>`;
+}
+
+function bottomNav(){
+  const items = [
+    {key:'mytask', label:'My Task', icon:ICONS.task},
+    {key:'alltask', label:'All Task', icon:ICONS.grid},
+    {key:'create', label:'Create WO', icon:ICONS.plus},
+    {key:'notification', label:'Notification', icon:ICONS.bell, badge:S.notifications.filter(n=>n.unread).length},
+    {key:'profile', label:'Profile', icon:ICONS.user},
+  ];
+  return `<div class="bottom-nav">
+    ${items.map(it=>`
+      <div class="nav-item ${S.tab===it.key?'active':''}" onclick="goTab('${it.key}')">
+        ${it.badge?'<span class="dot-badge"></span>':''}
+        ${it.icon}
+        <span class="label">${it.label}</span>
+      </div>`).join('')}
+  </div>`;
+}
+
+function drawerHtml(){
+  const items = [
+    {key:'mytask', label:'My Task', icon:ICONS.task},
+    {key:'alltask', label:'All Task', icon:ICONS.grid},
+    {key:'create', label:'Create WO', icon:ICONS.plus},
+    {key:'notification', label:'Notification', icon:ICONS.bell, badge:S.notifications.filter(n=>n.unread).length},
+    {key:'profile', label:'Profile', icon:ICONS.user},
+  ];
+  return `
+    <div class="drawer-overlay ${S.drawerOpen?'open':''}" onclick="toggleDrawer(false)"></div>
+    <div class="drawer ${S.drawerOpen?'open':''}">
+      <div class="drawer-head">
+        <button class="drawer-close" onclick="toggleDrawer(false)">${ICONS.x}</button>
+        <div class="drawer-avatar">ไก</div>
+        <div class="drawer-name">ไก - เจ้าหน้าที่ตรวจสอบ</div>
+        <div class="drawer-role">Inspection Engineer · Platong Platform</div>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-section-label">เมนูหลัก</div>
+        ${items.map(it=>`
+          <div class="drawer-item ${S.tab===it.key && S.view==='list' ? 'active':''}" onclick="goTab('${it.key}')">
+            <span class="di-icon">${it.icon}</span>
+            <span>${it.label}</span>
+            ${it.badge?`<span class="di-badge">${it.badge}</span>`:''}
+          </div>`).join('')}
+        <div class="drawer-divider"></div>
+        <div class="drawer-section-label">อื่นๆ</div>
+        <div class="drawer-item" onclick="toggleDrawer(false); toast('เปิดตั้งค่า (จำลอง)')">
+          <span class="di-icon">${ICONS.gear}</span><span>ตั้งค่า</span>
+        </div>
+        <div class="drawer-item" onclick="toggleDrawer(false); toast('เปิดช่วยเหลือ (จำลอง)')">
+          <span class="di-icon">${ICONS.search}</span><span>ช่วยเหลือ & ติดต่อเรา</span>
+        </div>
+      </div>
+      <div class="drawer-foot">
+        <button class="drawer-logout" onclick="toggleDrawer(false); toast('ออกจากระบบ (จำลอง)','error')">${ICONS.logout} ออกจากระบบ</button>
+        <div class="drawer-version">My Task App · v2.4.0</div>
+      </div>
+    </div>
+  `;
+}
+
+function taskCounts(list){
+  return {
+    all:list.length,
+    waiting:list.filter(t=>t.status==='waiting').length,
+    assigned:list.filter(t=>t.status==='assigned').length,
+    submitted:list.filter(t=>t.status==='submitted').length,
+  };
+}
+
+function isOverdue(due){
+  const [d,m,y] = due.split('/').map(Number);
+  const dueDate = new Date(y,m-1,d);
+  return dueDate < new Date(2026,6,3);
+}
+
+function filteredSortedTasks(scope){
+  let list = scope==='mine' ? S.tasks.filter(t=>t.status!=='submitted' || t.id===10) : S.tasks;
+  if(S.filter!=='all') list = list.filter(t=>t.status===S.filter);
+  if(S.filterPriority.length) list = list.filter(t=>S.filterPriority.includes(t.priority));
+  if(S.filterType.length) list = list.filter(t=>S.filterType.includes(t.type));
+  if(S.search.trim()){
+    const q = S.search.trim().toLowerCase();
+    list = list.filter(t=> t.wo.toLowerCase().includes(q) || t.title.toLowerCase().includes(q) || t.equipment.toLowerCase().includes(q));
+  }
+  list = [...list].sort((a,b)=>{
+    const pa = a.due.split('/').reverse().join('');
+    const pb = b.due.split('/').reverse().join('');
+    return S.sort==='due-asc' ? pa.localeCompare(pb) : pb.localeCompare(pa);
+  });
+  return list;
+}
+
+function cardHtml(t){
+  const overdue = isOverdue(t.due) && t.status!=='submitted';
+  return `<div class="card p-${t.priority}" onclick="openDetail(${t.id})">
+    <div class="card-top">
+      <div class="left">
+        <span class="wo-no">${t.wo}</span>
+        <span class="type-tag">${t.type}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span class="status-badge ${t.status}">${statusLabel[t.status]}</span>
+        <div class="kebab-wrap">
+          <div class="kebab" onclick="event.stopPropagation(); toggleKebab(${t.id})">${ICONS.kebab}</div>
+          ${S.kebabOpenId===t.id ? `
+          <div class="kebab-menu" onclick="event.stopPropagation()">
+            <div class="item" onclick="openDetail(${t.id})">${ICONS.eye} ดูรายละเอียด</div>
+            <div class="item danger" onclick="cancelWO(${t.id})">${ICONS.ban} ยกเลิกงาน</div>
+          </div>` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="card-title">${t.title}</div>
+    <div class="card-subtitle">${t.subtitle}</div>
+    <div class="card-bottom">
+      <div class="tags">${t.tags.map(tag=>`<span class="tag">${tag}</span>`).join('')}</div>
+      <div class="due">
+        <div class="label">SAP DUE</div>
+        <div class="date ${overdue?'':'ok'}">${t.due}</div>
+      </div>
+    </div>
+    ${t.inspection && t.status!=='submitted' ? `<div class="draft-flag">${ICONS.file} มีร่างที่บันทึกไว้</div>` : ''}
+  </div>`;
+}
+
+function emptyState(text, sub){
+  return `<div class="empty-state">
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="13" y2="13"/></svg>
+    <div class="t">${text}</div>
+    <div class="s">${sub}</div>
+  </div>`;
+}
+
+/* ============ SCREEN: TASK LIST (My Task / All Task) ============ */
+function renderListScreen(scope){
+  const list = filteredSortedTasks(scope);
+  const counts = taskCounts(scope==='mine' ? S.tasks.filter(t=>t.status!=='submitted' || t.id===10) : S.tasks);
+  const titleText = scope==='mine' ? 'My Task' : 'All Task';
+  const chips = [
+    {key:'all', label:'All', count:counts.all},
+    {key:'waiting', label:'Waiting Execute', count:counts.waiting},
+    {key:'assigned', label:'Assigned', count:counts.assigned},
+    {key:'submitted', label:'Submitted', count:counts.submitted},
+  ];
+  const activeExtraFilters = S.filterPriority.length + S.filterType.length;
+  return `
+    <div class="app-header">
+      <div class="top-row">
+        <div class="left"><div class="icon-btn" onclick="toggleDrawer()">${ICONS.menu}</div><span class="app-title">${titleText}</span></div>
+      </div>
+      <div class="search-row">
+        <div class="search-box">
+          ${ICONS.search}
+          <input placeholder="Search WO No., SAP, Equipment..." value="${S.search}" oninput="onSearch(this.value)"/>
+        </div>
+        <button class="filter-btn" onclick="openFilterSheet()">
+          ${ICONS.filter} Filter
+          ${activeExtraFilters?'<span class="badge-dot"></span>':''}
+        </button>
+      </div>
+    </div>
+    <div class="chip-row">
+      ${chips.map(c=>`<div class="chip ${S.filter===c.key?'active':''}" data-key="${c.key}" onclick="setFilter('${c.key}')">${c.label}<span class="count">${c.count}</span></div>`).join('')}
+    </div>
+    <div class="list-meta">
+      <span>Showing ${list.length} task${list.length!==1?'s':''}</span>
+      <div class="sort-btn" onclick="toggleSort()">${ICONS.sort} Sort by Due date ${S.sort==='due-asc'?'↑':'↓'}</div>
+    </div>
+    <div class="body-scroll">
+      <div class="list-wrap">
+        ${list.length ? list.map(cardHtml).join('') : emptyState('ไม่พบรายการงาน','ลองเปลี่ยนตัวกรองหรือคำค้นหาดูใหม่อีกครั้ง')}
+      </div>
+    </div>
+    ${bottomNav()}
+    ${S.filterSheetOpen ? filterSheetHtml() : ''}
+  `;
+}
+
+function filterSheetHtml(){
+  const priorities = ['critical','high','medium','low','normal'];
+  const types = ['PM','CM','CI'];
+  return `<div class="overlay" onclick="closeFilterSheet(event)">
+    <div class="sheet" onclick="event.stopPropagation()">
+      <div class="sheet-head"><h3>ตัวกรองเพิ่มเติม</h3><button class="sheet-close" onclick="closeFilterSheet()">${ICONS.x}</button></div>
+      <div class="filter-group">
+        <div class="g-title">ระดับความสำคัญ (Priority)</div>
+        <div class="filter-opts">
+          ${priorities.map(p=>`<div class="filter-opt ${S.filterPriority.includes(p)?'selected':''}" onclick="toggleFilterVal('filterPriority','${p}')">${priorityLabel[p]}</div>`).join('')}
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="g-title">ประเภทงาน (Work Order Type)</div>
+        <div class="filter-opts">
+          ${types.map(t=>`<div class="filter-opt ${S.filterType.includes(t)?'selected':''}" onclick="toggleFilterVal('filterType','${t}')">${t}</div>`).join('')}
+        </div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-outline" onclick="clearFilters()">ล้างตัวกรอง</button>
+        <button class="btn btn-primary" onclick="closeFilterSheet()">แสดงผลลัพธ์</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ============ SCREEN: WO DETAIL ============ */
+function renderDetailScreen(){
+  const t = S.tasks.find(x=>x.id===S.selectedId);
+  if(!t) return renderListScreen('mine');
+  const f = S.inspForm;
+  const err = S.inspErrors;
+  const rows = f.rows || [{loc:'',reading:'',std:''}];
+  const readonly = t.status === 'submitted';
+
+  return `
+    <div class="app-header">
+      <div class="top-row">
+        <div class="left">
+          <div class="icon-btn" onclick="backToList()">${ICONS.back}</div>
+          <div style="min-width:0;">
+            <div class="app-title">${t.title}</div>
+            <div class="app-subtitle">${t.wo}</div>
+          </div>
+        </div>
+        <span class="status-badge ${t.status}" style="background:rgba(255,255,255,.18); color:#fff;">${statusLabel[t.status]}</span>
+      </div>
+    </div>
+    <div class="body-scroll">
+      <div class="detail-body">
+
+        <div class="section-card">
+          <div class="section-title"><span class="num">1</span> ข้อมูลงาน (WO Info)</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="k">WO Number</div><div class="v">${t.wo}</div></div>
+            <div class="info-item"><div class="k">ประเภทงาน</div><div class="v">${t.type}</div></div>
+            <div class="info-item"><div class="k">อุปกรณ์ (Equipment)</div><div class="v">${t.equipment}</div></div>
+            <div class="info-item"><div class="k">พื้นที่ปฏิบัติงาน</div><div class="v">${t.location}</div></div>
+            <div class="info-item"><div class="k">ระดับความสำคัญ</div><div class="v">${priorityLabel[t.priority]}</div></div>
+            <div class="info-item"><div class="k">SAP Due Date</div><div class="v" style="color:${isOverdue(t.due)&&t.status!=='submitted'?'var(--overdue)':'var(--text-primary)'}">${t.due}</div></div>
+          </div>
+          <div class="desc-box">${t.desc}</div>
+          <div class="tags" style="margin-top:12px;">${t.tags.map(tag=>`<span class="tag">${tag}</span>`).join('')}</div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-title"><span class="num">2</span> แบบฟอร์มตรวจสอบ (Inspection Form)</div>
+
+          <div class="field ${err.inspector?'invalid':''}">
+            <label>ผู้ตรวจสอบ (Inspector Name) <span class="req">*</span></label>
+            <input type="text" ${readonly?'disabled':''} value="${f.inspector||''}" placeholder="ระบุชื่อผู้ตรวจสอบ" oninput="setInspField('inspector', this.value)"/>
+            <div class="err">กรุณาระบุชื่อผู้ตรวจสอบ</div>
+          </div>
+
+          <div class="field ${err.date?'invalid':''}">
+            <label>วันที่ตรวจสอบ (Inspection Date) <span class="req">*</span></label>
+            <input type="date" ${readonly?'disabled':''} value="${f.date||''}" oninput="setInspField('date', this.value)"/>
+            <div class="err">กรุณาระบุวันที่ตรวจสอบ</div>
+          </div>
+
+          <div class="field ${err.result?'invalid':''}">
+            <label>ผลการตรวจสอบ (Inspection Result) <span class="req">*</span></label>
+            <div class="radio-row">
+              <div class="radio-opt sel-pass ${f.result==='pass'?'selected':''}" onclick="${readonly?'':"setInspField('result','pass')"}">${ICONS.check} ผ่าน (Pass)</div>
+              <div class="radio-opt sel-fail ${f.result==='fail'?'selected':''}" onclick="${readonly?'':"setInspField('result','fail')"}">${ICONS.x} ไม่ผ่าน (Fail)</div>
+              <div class="radio-opt sel-follow ${f.result==='follow'?'selected':''}" onclick="${readonly?'':"setInspField('result','follow')"}">${ICONS.clock} ติดตามผล</div>
+            </div>
+            <div class="err">กรุณาเลือกผลการตรวจสอบ</div>
+          </div>
+
+          <div class="field">
+            <label>รายละเอียดที่ตรวจพบ (Findings)</label>
+            <textarea ${readonly?'disabled':''} placeholder="บันทึกสิ่งที่ตรวจพบระหว่างปฏิบัติงาน..." oninput="setInspField('findings', this.value)">${f.findings||''}</textarea>
+          </div>
+
+          <div class="field">
+            <label>ค่าที่วัดได้ (Measurement Record)</label>
+            <table class="measure-table">
+              <thead><tr><th style="width:40%">ตำแหน่งที่วัด</th><th>ค่าที่วัดได้ (mm)</th><th>ค่ามาตรฐาน</th><th></th></tr></thead>
+              <tbody>
+                ${rows.map((r,i)=>`
+                  <tr>
+                    <td><input ${readonly?'disabled':''} value="${r.loc}" placeholder="เช่น Point A" oninput="setRowField(${i},'loc',this.value)"/></td>
+                    <td><input ${readonly?'disabled':''} value="${r.reading}" placeholder="0.00" oninput="setRowField(${i},'reading',this.value)"/></td>
+                    <td><input ${readonly?'disabled':''} value="${r.std}" placeholder="0.00" oninput="setRowField(${i},'std',this.value)"/></td>
+                    <td>${readonly?'':`<button class="row-del" onclick="delRow(${i})">${ICONS.trash}</button>`}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+            ${readonly?'':`<button class="add-row-btn" onclick="addRow()">${ICONS.plus.replace('22','14').replace('22','14')} เพิ่มจุดตรวจวัด</button>`}
+          </div>
+
+          <div class="field">
+            <label>ข้อเสนอแนะ (Recommendation)</label>
+            <textarea ${readonly?'disabled':''} placeholder="ข้อเสนอแนะสำหรับการดำเนินการต่อไป..." oninput="setInspField('recommendation', this.value)">${f.recommendation||''}</textarea>
+          </div>
+
+          <div class="field">
+            <label>แนบรูปภาพ (Photo Attachment)</label>
+            ${readonly?'':`
+            <label class="upload-zone" for="fileInput">
+              ${ICONS.camera}
+              <div style="margin-top:6px;">แตะเพื่อแนบรูปภาพ (จำลอง)</div>
+            </label>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="addFiles(this.files)"/>`}
+            <div class="file-chip-row">
+              ${(f.files||[]).map((name,i)=>`<div class="file-chip">${ICONS.file} ${name} ${readonly?'':`<button onclick="delFile(${i})">${ICONS.x}</button>`}</div>`).join('')}
+            </div>
+          </div>
+
+          ${!readonly ? `
+          <div class="field" style="margin-top:6px;">
+            <div class="confirm-row" onclick="toggleConfirm()">
+              <input type="checkbox" ${f.confirm?'checked':''} onclick="event.stopPropagation(); toggleConfirm()"/>
+              <span>ข้าพเจ้าขอยืนยันว่าข้อมูลที่กรอกข้างต้นถูกต้องและตรงตามการปฏิบัติงานจริง</span>
+            </div>
+            ${err.confirm?'<div class="err" style="display:block;">กรุณายืนยันความถูกต้องของข้อมูลก่อนส่งงาน</div>':''}
+          </div>` : `<div class="confirm-row"><span>${ICONS.check} ยืนยันข้อมูลถูกต้องแล้ว และส่งงานเรียบร้อย</span></div>`}
+        </div>
+
+      </div>
+    </div>
+    ${!readonly ? `
+    <div class="detail-actionbar">
+      <button class="btn btn-outline" onclick="saveDraft()">บันทึกร่าง</button>
+      <button class="btn btn-primary" onclick="confirmSubmit()">${ICONS.check} ส่งงาน (Submit)</button>
+    </div>` : `
+    <div class="detail-actionbar">
+      <button class="btn btn-outline" onclick="backToList()">${ICONS.back} กลับหน้ารายการ</button>
+    </div>`}
+    ${S.confirmSubmitFor===t.id ? confirmSubmitModal() : ''}
+  `;
+}
+
+function confirmSubmitModal(){
+  return `<div class="overlay" onclick="S.confirmSubmitFor=null; render();">
+    <div class="sheet" onclick="event.stopPropagation()" style="border-radius:20px; max-width:400px;">
+      <div style="text-align:center; padding:8px 4px 4px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">${ICONS.check}</div>
+        <h3 style="margin:0 0 8px;">ยืนยันการส่งงาน?</h3>
+        <p style="color:var(--text-secondary); font-size:13.5px; margin:0 0 18px;">เมื่อส่งงานแล้ว จะไม่สามารถแก้ไขแบบฟอร์มตรวจสอบนี้ได้อีก กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนดำเนินการ</p>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-outline" onclick="S.confirmSubmitFor=null; render();">ยกเลิก</button>
+        <button class="btn btn-primary" onclick="doSubmit()">ยืนยันส่งงาน</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ============ SCREEN: CREATE WO ============ */
+function renderCreateScreen(){
+  const f = S.createForm, err = S.createErrors;
+  return `
+    <div class="app-header">
+      <div class="top-row"><div class="left"><div class="icon-btn" onclick="toggleDrawer()">${ICONS.menu}</div><span class="app-title">Create Work Order</span></div></div>
+    </div>
+    <div class="body-scroll">
+      <div class="detail-body">
+        <div class="section-card">
+          <div class="section-title"><span class="num">1</span> รายละเอียดงาน</div>
+
+          <div class="field ${err.title?'invalid':''}">
+            <label>ชื่องาน (Title) <span class="req">*</span></label>
+            <input type="text" value="${f.title||''}" placeholder="เช่น TK-301 ROOF INSPECTION" oninput="setCreateField('title', this.value)"/>
+            <div class="err">กรุณาระบุชื่องาน</div>
+          </div>
+
+          <div class="field ${err.type?'invalid':''}">
+            <label>ประเภทงาน (WO Type) <span class="req">*</span></label>
+            <select onchange="setCreateField('type', this.value)">
+              <option value="">เลือกประเภทงาน</option>
+              <option value="PM" ${f.type==='PM'?'selected':''}>PM - Preventive Maintenance</option>
+              <option value="CM" ${f.type==='CM'?'selected':''}>CM - Corrective Maintenance</option>
+              <option value="CI" ${f.type==='CI'?'selected':''}>CI - Inspection</option>
+            </select>
+            <div class="err">กรุณาเลือกประเภทงาน</div>
+          </div>
+
+          <div class="field ${err.equipment?'invalid':''}">
+            <label>อุปกรณ์ (Equipment No.) <span class="req">*</span></label>
+            <input type="text" value="${f.equipment||''}" placeholder="เช่น TK-301" oninput="setCreateField('equipment', this.value)"/>
+            <div class="err">กรุณาระบุรหัสอุปกรณ์</div>
+          </div>
+
+          <div class="field">
+            <label>ระดับความสำคัญ (Priority)</label>
+            <select onchange="setCreateField('priority', this.value)">
+              <option value="normal" ${f.priority==='normal'||!f.priority?'selected':''}>Normal</option>
+              <option value="low" ${f.priority==='low'?'selected':''}>Low</option>
+              <option value="medium" ${f.priority==='medium'?'selected':''}>Medium</option>
+              <option value="high" ${f.priority==='high'?'selected':''}>High</option>
+              <option value="critical" ${f.priority==='critical'?'selected':''}>Critical / Overdue</option>
+            </select>
+          </div>
+
+          <div class="field ${err.due?'invalid':''}">
+            <label>SAP Due Date <span class="req">*</span></label>
+            <input type="date" value="${f.due||''}" oninput="setCreateField('due', this.value)"/>
+            <div class="err">กรุณาระบุวันครบกำหนด</div>
+          </div>
+
+          <div class="field">
+            <label>รายละเอียดงาน (Description)</label>
+            <textarea placeholder="อธิบายรายละเอียดขอบเขตงาน..." oninput="setCreateField('desc', this.value)">${f.desc||''}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-actionbar">
+      <button class="btn btn-outline" onclick="resetCreateForm()">ล้างข้อมูล</button>
+      <button class="btn btn-primary" onclick="submitCreateWO()">${ICONS.plus} สร้างใบสั่งงาน</button>
+    </div>
+  `;
+}
+
+/* ============ SCREEN: NOTIFICATION ============ */
+function renderNotifScreen(){
+  return `
+    <div class="app-header">
+      <div class="top-row">
+        <div class="left"><div class="icon-btn" onclick="toggleDrawer()">${ICONS.menu}</div><span class="app-title">Notification</span></div>
+        <div class="icon-btn" onclick="markAllRead()" title="อ่านทั้งหมด">${ICONS.check}</div>
+      </div>
+    </div>
+    <div class="body-scroll">
+      ${S.notifications.map(n=>`
+        <div class="notif-item ${n.unread?'unread':''}" onclick="readNotif(${n.id})">
+          <div class="notif-icon">${ICONS[n.icon]||ICONS.bell}</div>
+          <div class="notif-body">
+            <div class="notif-title">${n.title}</div>
+            <div class="notif-desc">${n.desc}</div>
+            <div class="notif-time">${n.time}</div>
+          </div>
+          ${n.unread?'<div class="unread-dot"></div>':''}
+        </div>
+      `).join('')}
+    </div>
+    ${bottomNav()}
+  `;
+}
+
+/* ============ SCREEN: PROFILE ============ */
+function renderProfileScreen(){
+  const submittedCount = S.tasks.filter(t=>t.status==='submitted').length;
+  const waitingCount = S.tasks.filter(t=>t.status==='waiting').length;
+  const assignedCount = S.tasks.filter(t=>t.status==='assigned').length;
+  return `
+    <div class="app-header" style="padding-bottom:0;">
+      <div class="top-row"><div class="left"><div class="icon-btn" onclick="toggleDrawer()">${ICONS.menu}</div><span class="app-title">Profile</span></div></div>
+    </div>
+    <div class="body-scroll">
+      <div class="profile-hero">
+        <div class="avatar">ไก</div>
+        <h2>ไก - เจ้าหน้าที่ตรวจสอบ</h2>
+        <p>Inspection Engineer · Platong Platform</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="n">${waitingCount}</div><div class="l">รอดำเนินการ</div></div>
+        <div class="stat-card"><div class="n">${assignedCount}</div><div class="l">ได้รับมอบหมาย</div></div>
+        <div class="stat-card"><div class="n">${submittedCount}</div><div class="l">ส่งงานแล้ว</div></div>
+      </div>
+      <div class="menu-list">
+        <div class="menu-row" onclick="toast('เปิดข้อมูลส่วนตัว (จำลอง)')"><div class="mi">${ICONS.user}</div><span>ข้อมูลส่วนตัว</span></div>
+        <div class="menu-row" onclick="toast('เปิดประวัติการทำงาน (จำลอง)')"><div class="mi">${ICONS.file}</div><span>ประวัติการทำงาน</span></div>
+        <div class="menu-row" onclick="toast('เปิดการแจ้งเตือน (จำลอง)')"><div class="mi">${ICONS.bell}</div><span>ตั้งค่าการแจ้งเตือน</span></div>
+        <div class="menu-row" onclick="toast('เปิดความช่วยเหลือ (จำลอง)')"><div class="mi">${ICONS.search}</div><span>ช่วยเหลือ & ติดต่อเรา</span></div>
+      </div>
+      <button class="logout-btn" onclick="toast('ออกจากระบบ (จำลอง)','error')">ออกจากระบบ</button>
+    </div>
+    ${bottomNav()}
+  `;
+}
+
+/* ============ MAIN RENDER ============ */
+function render(){
+  let html = statusBar();
+  if(S.view==='detail'){
+    html += renderDetailScreen();
+  } else if(S.tab==='mytask'){
+    html += renderListScreen('mine');
+  } else if(S.tab==='alltask'){
+    html += renderListScreen('all');
+  } else if(S.tab==='create'){
+    html += renderCreateScreen();
+  } else if(S.tab==='notification'){
+    html += renderNotifScreen();
+  } else if(S.tab==='profile'){
+    html += renderProfileScreen();
+  }
+  if(S.toast){
+    html += `<div class="toast ${S.toast.type==='error'?'error':''}"><span class="ic">${S.toast.type==='error'?ICONS.x:ICONS.check}</span>${S.toast.msg}</div>`;
+  }
+  html += drawerHtml();
+  document.getElementById('screen').innerHTML = html;
+}
+
+/* ============ ACTIONS ============ */
+function goTab(tab){
+  S.tab = tab; S.view='list'; S.kebabOpenId=null; S.filterSheetOpen=false; S.drawerOpen=false;
+  if(tab==='create'){ S.createForm={}; S.createErrors={}; }
+  render();
+}
+function toggleDrawer(force){
+  S.drawerOpen = typeof force === 'boolean' ? force : !S.drawerOpen;
+  render();
+}
+function setFilter(key){ S.filter = key; S.kebabOpenId=null; render(); }
+function toggleSort(){ S.sort = S.sort==='due-asc' ? 'due-desc' : 'due-asc'; render(); }
+function onSearch(val){ S.search = val; render(); document.querySelector('.search-box input')?.focus(); }
+function toggleKebab(id){ S.kebabOpenId = S.kebabOpenId===id ? null : id; render(); }
+function cancelWO(id){
+  S.kebabOpenId=null;
+  if(confirm('ยืนยันการยกเลิกใบสั่งงานนี้หรือไม่?')){
+    S.tasks = S.tasks.filter(t=>t.id!==id);
+    toast('ยกเลิกใบสั่งงานเรียบร้อย','error');
+  } else { render(); }
+}
+function openFilterSheet(){ S.filterSheetOpen=true; render(); }
+function closeFilterSheet(e){ S.filterSheetOpen=false; render(); }
+function toggleFilterVal(key, val){
+  const arr = S[key];
+  const i = arr.indexOf(val);
+  if(i>-1) arr.splice(i,1); else arr.push(val);
+  render();
+}
+function clearFilters(){ S.filterPriority=[]; S.filterType=[]; render(); }
+
+function openDetail(id){
+  const t = S.tasks.find(x=>x.id===id);
+  S.selectedId = id; S.view='detail'; S.kebabOpenId=null;
+  S.inspForm = t.inspection ? JSON.parse(JSON.stringify(t.inspection)) : {rows:[{loc:'',reading:'',std:''}]};
+  S.inspErrors = {};
+  window.scrollTo(0,0);
+  render();
+}
+function backToList(){ S.view='list'; S.selectedId=null; render(); }
+
+function setInspField(key,val){ S.inspForm[key]=val; if(S.inspErrors[key]) delete S.inspErrors[key]; render(); }
+function toggleConfirm(){ S.inspForm.confirm = !S.inspForm.confirm; if(S.inspErrors.confirm) delete S.inspErrors.confirm; render(); }
+function setRowField(i,key,val){ S.inspForm.rows[i][key]=val; render(); }
+function addRow(){ S.inspForm.rows = S.inspForm.rows||[]; S.inspForm.rows.push({loc:'',reading:'',std:''}); render(); }
+function delRow(i){ S.inspForm.rows.splice(i,1); if(!S.inspForm.rows.length) S.inspForm.rows=[{loc:'',reading:'',std:''}]; render(); }
+function addFiles(fileList){
+  S.inspForm.files = S.inspForm.files || [];
+  Array.from(fileList).forEach(f=> S.inspForm.files.push(f.name));
+  render();
+}
+function delFile(i){ S.inspForm.files.splice(i,1); render(); }
+
+function saveDraft(){
+  const t = S.tasks.find(x=>x.id===S.selectedId);
+  t.inspection = JSON.parse(JSON.stringify(S.inspForm));
+  toast('บันทึกร่างเรียบร้อยแล้ว');
+}
+
+function confirmSubmit(){
+  const f = S.inspForm, err = {};
+  if(!f.inspector || !f.inspector.trim()) err.inspector = true;
+  if(!f.date) err.date = true;
+  if(!f.result) err.result = true;
+  if(!f.confirm) err.confirm = true;
+  S.inspErrors = err;
+  if(Object.keys(err).length){
+    render();
+    toast('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน','error');
+    return;
+  }
+  S.confirmSubmitFor = S.selectedId;
+  render();
+}
+
+function doSubmit(){
+  const t = S.tasks.find(x=>x.id===S.selectedId);
+  t.inspection = JSON.parse(JSON.stringify(S.inspForm));
+  t.status = 'submitted';
+  S.confirmSubmitFor = null;
+  toast('ส่งงานเรียบร้อยแล้ว');
+  setTimeout(()=>{ backToList(); }, 500);
+}
+
+function setCreateField(key,val){ S.createForm[key]=val; if(S.createErrors[key]) delete S.createErrors[key]; }
+function resetCreateForm(){ S.createForm={}; S.createErrors={}; render(); }
+function submitCreateWO(){
+  const f = S.createForm, err = {};
+  if(!f.title || !f.title.trim()) err.title = true;
+  if(!f.type) err.type = true;
+  if(!f.equipment || !f.equipment.trim()) err.equipment = true;
+  if(!f.due) err.due = true;
+  S.createErrors = err;
+  if(Object.keys(err).length){ render(); toast('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน','error'); return; }
+  uid++;
+  const newTask = {
+    id: uid, wo:`2026${String(Math.floor(300000+Math.random()*90000))}`, type:f.type,
+    priority: f.priority||'normal', status:'waiting', title:f.title, subtitle:f.desc||'ไม่มีรายละเอียดเพิ่มเติม',
+    tags:[f.equipment], due: dateToDMY(f.due), equipment:f.equipment, location:'-', desc: f.desc||'ไม่มีรายละเอียดเพิ่มเติม',
+  };
+  S.tasks.unshift(newTask);
+  toast('สร้างใบสั่งงานเรียบร้อยแล้ว');
+  setTimeout(()=>{ goTab('mytask'); }, 500);
+}
+
+function readNotif(id){ const n = S.notifications.find(x=>x.id===id); if(n) n.unread=false; render(); }
+function markAllRead(){ S.notifications.forEach(n=>n.unread=false); toast('อ่านการแจ้งเตือนทั้งหมดแล้ว'); }
+
+document.getElementById('rotateBtn').addEventListener('click', () => {
+  document.getElementById('device').classList.toggle('landscape');
+});
+document.addEventListener('click', (e)=>{
+  if(S.kebabOpenId!==null && !e.target.closest('.kebab-wrap')){ S.kebabOpenId=null; render(); }
+});
+
+render();
+</script>
+</body>
+</html>
